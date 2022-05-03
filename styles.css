@@ -39,7 +39,11 @@ h1 {
 }
 
 .grid-container > .grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-bottom: solid black 2px;
     border-right: solid black 2px;
+    font-size: 100px;
 }
 

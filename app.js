@@ -1,16 +1,24 @@
 const gameBoard = (() => {
     let grid = [
-        Array(3).fill(undefined),
-        Array(3).fill(undefined),
-        Array(3).fill(undefined)
+        Array(3).fill(""),
+        Array(3).fill(""),
+        Array(3).fill("")
     ];
     const printGrid = () => console.log(grid);
     const addMove = (rowIndex, colIndex, symbol) => {
         grid[rowIndex][colIndex] = symbol;
         printGrid();
-    }
-
-    return {printGrid, addMove};
+    };
+    const render = () => {
+        for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
+            for (let colIndex = 0; colIndex < 3; colIndex++) {
+                const gridItem = document.querySelector(
+                    `.grid-item[data-rowIndex="${rowIndex}"][data-colIndex="${colIndex}"]`);
+                gridItem.textContent = grid[rowIndex][colIndex];
+            }
+        }
+    };
+    return {printGrid, addMove, render};
 })();
 
 const createPlayer = (name, symbol) => {
