@@ -4,41 +4,64 @@ const gameBoard = (() => {
         Array(3).fill(""),
         Array(3).fill("")
     ];
-    const printGrid = () => console.log(grid);
+    const getGrid = () => grid;
     const addMove = (rowIndex, colIndex, symbol) => {
         grid[rowIndex][colIndex] = symbol;
-        printGrid();
+        console.log(grid);
     };
-    const render = () => {
+
+    return {getGrid, addMove};
+})();
+
+const displayController = (() => {
+    const renderGrid = (grid) => {
         for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
             for (let colIndex = 0; colIndex < 3; colIndex++) {
                 const gridItem = document.querySelector(
-                    `.grid-item[data-rowIndex="${rowIndex}"][data-colIndex="${colIndex}"]`);
+                    `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
                 gridItem.textContent = grid[rowIndex][colIndex];
             }
         }
     };
-    return {printGrid, addMove, render};
+    const addClickEvents = () => {
+        for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
+            for (let colIndex = 0; colIndex < 3; colIndex++) {
+                const gridItem = document.querySelector(
+                    `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
+                gridItem.addEventListener("click", gridClickEvent);
+            }
+        }
+    };
+    const gridClickEvent = (e) => {
+        const rowIndex = e.target.dataset.rowIndex;
+        const colIndex = e.target.dataset.colIndex;
+        game.playTurn(rowIndex, colIndex);
+    };
+
+    return {renderGrid, addClickEvents};
 })();
 
 const createPlayer = (name, symbol) => {
-    const playMove = () => {
-        const rowIndex = Number(prompt("Select a row to play in from 0 to 2"));
-        const colIndex = Number(prompt("Select a column to play in from 0 to 2"));
-        return {rowIndex, colIndex};
+    const playMove = (rowIndex, colIndex) => {
+        gameBoard.addMove(rowIndex, colIndex, symbol);
     }
 
     return {name, symbol, playMove}
 };
 
-const playerOne = createPlayer("Player One", "X");
-const playerTwo = createPlayer("Player Two", "O");
-
 const game = (() => {
-    const playTurn = (player) => {
-        const {rowIndex, colIndex} = player.playMove();
-        console.log(rowIndex, colIndex);
-        gameBoard.addMove(rowIndex, colIndex, player.symbol);
+    const playerOne = createPlayer("Player One", "X");
+    const playerTwo = createPlayer("Player Two", "O");
+    let currentPlayer = playerOne;
+    
+    const playTurn = (rowIndex, colIndex) => {
+        currentPlayer.playMove(rowIndex, colIndex);
+        if (currentPlayer === playerOne) {
+            currentPlayer = playerTwo;
+        }
+        else {
+            currentPlayer = playerOne;
+        }
     };
 
     return {playTurn};
