@@ -45,8 +45,12 @@ const gameBoard = (() => {
 
 const displayController = (() => {
     const _gridItemsNodeList = document.querySelectorAll(".grid-item");
+    const _gameOverContainer = document.querySelector(".game-over-container");
+    const _playAgainButton = document.createElement("button");
 
-    const renderGrid = (grid) => {
+    const renderGrid = () => {
+        const grid = gameBoard.getGrid();
+
         _gridItemsNodeList.forEach((gridItem) => {
             const rowIndex = gridItem.dataset.rowIndex;
             const colIndex = gridItem.dataset.colIndex;
@@ -55,10 +59,10 @@ const displayController = (() => {
     };
     const addGridEvents = () => {
         _gridItemsNodeList.forEach((gridItem) => {
-            gridItem.addEventListener("click", gridEvent);
+            gridItem.addEventListener("click", _gridEvent);
         });
     };
-    const gridEvent = (e) => {
+    const _gridEvent = (e) => {
         const rowIndex = e.target.dataset.rowIndex;
         const colIndex = e.target.dataset.colIndex;
         game.playTurn(rowIndex, colIndex);
@@ -66,26 +70,28 @@ const displayController = (() => {
     const removeGridEvent = (rowIndex, colIndex) => {
         const gridItem = document.querySelector(
             `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
-        gridItem.removeEventListener("click", gridEvent);
+        gridItem.removeEventListener("click", _gridEvent);
     };
     const removeAllGridEvents = () => {
         _gridItemsNodeList.forEach((gridItem) => {
-            gridItem.removeEventListener("click", gridEvent);
+            gridItem.removeEventListener("click", _gridEvent);
         });
     };
-    const showGameOver = (winnerName) => {
-        const gameOverContainer = document.querySelector(".game-over-container");
-        const playAgainButton = document.createElement("button");
+    const addGameOver = (winnerName) => {
+        _gameOverContainer.textContent = `Game Over! The Winner is ${winnerName}`;
+        _playAgainButton.textContent = "Play Again";
 
-        gameOverContainer.textContent = `Game Over! The Winner is ${winnerName}`;
-        playAgainButton.textContent = "Play Again";
-        playAgainButton.addEventListener("click", () => {
-
+        _playAgainButton.addEventListener("click", () => {
+            while (_gameOverContainer.firstChild) {
+                _gameOverContainer.removeChild(_gameOverContainer.firstChild);
+            }
+            
+            game.startGame();
         });
-        gameOverContainer.appendChild(playAgainButton);
+        _gameOverContainer.appendChild(_playAgainButton);
     }
 
-    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents, showGameOver};
+    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents, addGameOver};
 })();
 
 const createPlayer = (name, symbol) => {
@@ -111,14 +117,13 @@ const game = (() => {
         _tie = false;
 
         gameBoard.createGrid();
+        displayController.renderGrid();
         displayController.addGridEvents();
     };
 
     const playTurn = (rowIndex, colIndex) => {
-        const grid = gameBoard.getGrid();
-
         _currentPlayer.playMove(rowIndex, colIndex);
-        displayController.renderGrid(grid);
+        displayController.renderGrid();
         displayController.removeGridEvent(rowIndex, colIndex);
         _win = gameBoard.checkWinner(_currentPlayer.symbol);
         
@@ -138,7 +143,7 @@ const game = (() => {
         }
     };
     const endGame = () => {
-        displayController.showGameOver(_currentPlayer.name);
+        displayController.addGameOver(_currentPlayer.name);
     };
 
     return {playTurn, startGame, endGame};
