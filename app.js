@@ -40,23 +40,19 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
+    const gridItemsNodeList = document.querySelectorAll(".grid-item");
+
     const renderGrid = (grid) => {
-        for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-            for (let colIndex = 0; colIndex < 3; colIndex++) {
-                const gridItem = document.querySelector(
-                    `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
-                gridItem.textContent = grid[rowIndex][colIndex];
-            }
-        }
+        gridItemsNodeList.forEach((gridItem) => {
+            const rowIndex = gridItem.dataset.rowIndex;
+            const colIndex = gridItem.dataset.colIndex;
+            gridItem.textContent = grid[rowIndex][colIndex];
+        });
     };
     const addGridEvents = () => {
-        for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-            for (let colIndex = 0; colIndex < 3; colIndex++) {
-                const gridItem = document.querySelector(
-                    `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
-                gridItem.addEventListener("click", gridEvent);
-            }
-        }
+        gridItemsNodeList.forEach((gridItem) => {
+            gridItem.addEventListener("click", gridEvent);
+        });
     };
     const gridEvent = (e) => {
         const rowIndex = e.target.dataset.rowIndex;
@@ -69,8 +65,7 @@ const displayController = (() => {
         gridItem.removeEventListener("click", gridEvent);
     };
     const removeAllGridEvents = () => {
-        const gridContainer = document.querySelectorAll(".grid-item");
-        gridContainer.forEach((gridItem) => {
+        gridItemsNodeList.forEach((gridItem) => {
             gridItem.removeEventListener("click", gridEvent);
         });
     };
