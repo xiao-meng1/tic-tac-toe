@@ -49,27 +49,33 @@ const displayController = (() => {
             }
         }
     };
-    const addGridClickEvents = () => {
+    const addGridEvents = () => {
         for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
             for (let colIndex = 0; colIndex < 3; colIndex++) {
                 const gridItem = document.querySelector(
                     `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
-                gridItem.addEventListener("click", gridClickEvent);
+                gridItem.addEventListener("click", gridEvent);
             }
         }
     };
-    const gridClickEvent = (e) => {
+    const gridEvent = (e) => {
         const rowIndex = e.target.dataset.rowIndex;
         const colIndex = e.target.dataset.colIndex;
         game.playTurn(rowIndex, colIndex);
     };
-    const removeGridClickEvent = (rowIndex, colIndex) => {
+    const removeGridEvent = (rowIndex, colIndex) => {
         const gridItem = document.querySelector(
             `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
-        gridItem.removeEventListener("click", gridClickEvent);
+        gridItem.removeEventListener("click", gridEvent);
+    };
+    const removeAllGridEvents = () => {
+        const gridContainer = document.querySelectorAll(".grid-item");
+        gridContainer.forEach((gridItem) => {
+            gridItem.removeEventListener("click", gridEvent);
+        });
     };
 
-    return {renderGrid, addGridClickEvents, removeGridClickEvent};
+    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents};
 })();
 
 const createPlayer = (name, symbol) => {
@@ -87,16 +93,18 @@ const game = (() => {
     let win = false;
     let tie = false;
 
-    displayController.addGridClickEvents();
+    displayController.addGridEvents();
 
     const playTurn = (rowIndex, colIndex) => {
         const grid = gameBoard.getGrid();
 
         currentPlayer.playMove(rowIndex, colIndex);
         displayController.renderGrid(grid);
-        displayController.removeGridClickEvent(rowIndex, colIndex);
+        displayController.removeGridEvent(rowIndex, colIndex);
         win = gameBoard.checkWinner(currentPlayer.symbol);
         
+        if (win) displayController.removeAllGridEvents();
+
         if (!win) {
             tie = gameBoard.checkTie();
         }
