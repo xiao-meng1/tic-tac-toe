@@ -77,15 +77,16 @@ const displayController = (() => {
             gridItem.removeEventListener("click", _gridEvent);
         });
     };
-    const addGameOver = (winnerName) => {
-        _gameOverContainer.textContent = `Game Over! The Winner is ${winnerName}`;
+    const addGameOver = (winnerName, result) => {
+        _gameOverContainer.textContent = (result === "win") ? 
+            `Game Over! The Winner is ${winnerName}` : "Game Over! Tie Game";
         _playAgainButton.textContent = "Play Again";
 
         _playAgainButton.addEventListener("click", () => {
             while (_gameOverContainer.firstChild) {
                 _gameOverContainer.removeChild(_gameOverContainer.firstChild);
             }
-            
+
             game.startGame();
         });
         _gameOverContainer.appendChild(_playAgainButton);
@@ -108,6 +109,7 @@ const game = (() => {
     let _currentPlayer;
     let _win;
     let _tie;
+    let _result;
 
     const startGame = () => {
         _playerOne = createPlayer("Player One", "X");
@@ -115,6 +117,7 @@ const game = (() => {
         _currentPlayer = _playerOne;
         _win = false;
         _tie = false;
+        _result = "";
 
         gameBoard.createGrid();
         displayController.renderGrid();
@@ -127,13 +130,20 @@ const game = (() => {
         displayController.removeGridEvent(rowIndex, colIndex);
         _win = gameBoard.checkWinner(_currentPlayer.symbol);
         
-        if (_win) displayController.removeAllGridEvents();
-
-        if (!_win) {
-            _tie = gameBoard.checkTie();
+        if (_win) {
+            displayController.removeAllGridEvents();
+            _result = "win";
+            game.endGame();
+            return;
         }
-
-        if (_win || _tie) game.endGame();
+        else {
+            _tie = gameBoard.checkTie();
+            if (_tie) {
+                _result = "tie";
+                game.endGame();
+                return;
+            }
+        }
 
         if (_currentPlayer === _playerOne) {
             _currentPlayer = _playerTwo;
@@ -143,7 +153,7 @@ const game = (() => {
         }
     };
     const endGame = () => {
-        displayController.addGameOver(_currentPlayer.name);
+        displayController.addGameOver(_currentPlayer.name, _result);
     };
 
     return {playTurn, startGame, endGame};
