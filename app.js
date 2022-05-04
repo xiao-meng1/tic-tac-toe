@@ -1,25 +1,25 @@
 const gameBoard = (() => {
-    let grid = [
+    let _grid = [
         Array(3).fill(""),
         Array(3).fill(""),
         Array(3).fill("")
     ];
-    const getGrid = () => grid;
+    const getGrid = () => _grid;
     const addMove = (rowIndex, colIndex, symbol) => {
-        grid[rowIndex][colIndex] = symbol;
+        _grid[rowIndex][colIndex] = symbol;
     };
     const checkWinner = (symbol) => {
         let win = false;
 
         if (
-            grid[0][0] === symbol && grid[0][1] === symbol && grid[0][2] === symbol
-            || grid[1][0] === symbol && grid[1][1] === symbol && grid[1][2] === symbol
-            || grid[2][0] === symbol && grid[2][1] === symbol && grid[2][2] === symbol
-            || grid[0][0] === symbol && grid[1][0] === symbol && grid[2][0] === symbol
-            || grid[0][1] === symbol && grid[1][1] === symbol && grid[2][1] === symbol
-            || grid[0][2] === symbol && grid[1][2] === symbol && grid[2][2] === symbol
-            || grid[0][0] === symbol && grid[1][1] === symbol && grid[2][2] === symbol
-            || grid[0][2] === symbol && grid[1][1] === symbol && grid[2][0] === symbol)
+            _grid[0][0] === symbol && _grid[0][1] === symbol && _grid[0][2] === symbol
+            || _grid[1][0] === symbol && _grid[1][1] === symbol && _grid[1][2] === symbol
+            || _grid[2][0] === symbol && _grid[2][1] === symbol && _grid[2][2] === symbol
+            || _grid[0][0] === symbol && _grid[1][0] === symbol && _grid[2][0] === symbol
+            || _grid[0][1] === symbol && _grid[1][1] === symbol && _grid[2][1] === symbol
+            || _grid[0][2] === symbol && _grid[1][2] === symbol && _grid[2][2] === symbol
+            || _grid[0][0] === symbol && _grid[1][1] === symbol && _grid[2][2] === symbol
+            || _grid[0][2] === symbol && _grid[1][1] === symbol && _grid[2][0] === symbol)
         {
             win = true;
         }
@@ -29,7 +29,7 @@ const gameBoard = (() => {
     const checkTie = () => {
         let tie = false;
 
-        tie = grid.every((row) => {
+        tie = _grid.every((row) => {
             return row.every((cell) => cell !== "");   
         });
 
@@ -40,17 +40,17 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-    const gridItemsNodeList = document.querySelectorAll(".grid-item");
+    const _gridItemsNodeList = document.querySelectorAll(".grid-item");
 
     const renderGrid = (grid) => {
-        gridItemsNodeList.forEach((gridItem) => {
+        _gridItemsNodeList.forEach((gridItem) => {
             const rowIndex = gridItem.dataset.rowIndex;
             const colIndex = gridItem.dataset.colIndex;
             gridItem.textContent = grid[rowIndex][colIndex];
         });
     };
     const addGridEvents = () => {
-        gridItemsNodeList.forEach((gridItem) => {
+        _gridItemsNodeList.forEach((gridItem) => {
             gridItem.addEventListener("click", gridEvent);
         });
     };
@@ -65,7 +65,7 @@ const displayController = (() => {
         gridItem.removeEventListener("click", gridEvent);
     };
     const removeAllGridEvents = () => {
-        gridItemsNodeList.forEach((gridItem) => {
+        _gridItemsNodeList.forEach((gridItem) => {
             gridItem.removeEventListener("click", gridEvent);
         });
     };
@@ -82,35 +82,35 @@ const createPlayer = (name, symbol) => {
 };
 
 const game = (() => {
-    const playerOne = createPlayer("Player One", "X");
-    const playerTwo = createPlayer("Player Two", "O");
-    let currentPlayer = playerOne;
-    let win = false;
-    let tie = false;
+    const _playerOne = createPlayer("Player One", "X");
+    const _playerTwo = createPlayer("Player Two", "O");
+    let _currentPlayer = _playerOne;
+    let _win = false;
+    let _tie = false;
 
     displayController.addGridEvents();
 
     const playTurn = (rowIndex, colIndex) => {
         const grid = gameBoard.getGrid();
 
-        currentPlayer.playMove(rowIndex, colIndex);
+        _currentPlayer.playMove(rowIndex, colIndex);
         displayController.renderGrid(grid);
         displayController.removeGridEvent(rowIndex, colIndex);
-        win = gameBoard.checkWinner(currentPlayer.symbol);
+        _win = gameBoard.checkWinner(_currentPlayer.symbol);
         
-        if (win) displayController.removeAllGridEvents();
+        if (_win) displayController.removeAllGridEvents();
 
-        if (!win) {
-            tie = gameBoard.checkTie();
+        if (!_win) {
+            _tie = gameBoard.checkTie();
         }
 
-        if (win || tie) game.endGame();
+        if (_win || _tie) game.endGame();
 
-        if (currentPlayer === playerOne) {
-            currentPlayer = playerTwo;
+        if (_currentPlayer === _playerOne) {
+            _currentPlayer = _playerTwo;
         }
         else {
-            currentPlayer = playerOne;
+            _currentPlayer = _playerOne;
         }
     };
     const endGame = () => {
