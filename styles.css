@@ -9,11 +9,10 @@ html {
 }
 
 body {
-    padding: 60px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
 }
 
 h1 {
@@ -24,16 +23,17 @@ h1 {
 .player-container {
     display: grid;
     grid-template-columns: 120px 120px;
-    grid-template-rows: 40px 40px;
+    grid-template-rows: 40px;
     justify-items: center;
     align-items: center;
+    padding-bottom: 10px;
     font-size: 20px;
 }
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 150px);
-    grid-template-rows: repeat(3, 150px);
+    grid-template-columns: repeat(3, 120px);
+    grid-template-rows: repeat(3, 120px);
     border-top: solid black 2px;
     border-left: solid black 2px;
 }
@@ -44,6 +44,19 @@ h1 {
     align-items: center;
     border-bottom: solid black 2px;
     border-right: solid black 2px;
-    font-size: 100px;
+    font-size: 80px;
 }
 
+.game-over-container {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    height: 100px;
+    width: 600px;
+    padding-top: 10px;
+    font-size: 24px;
+}
+
+.game-over-container > button {
+    width: 100px;
+}

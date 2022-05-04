@@ -69,8 +69,16 @@ const displayController = (() => {
             gridItem.removeEventListener("click", gridEvent);
         });
     };
+    const showGameOver = (winnerName) => {
+        const gameOverContainer = document.querySelector(".game-over-container");
+        const playAgainButton = document.createElement("button");
 
-    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents};
+        gameOverContainer.textContent = `Game Over! The Winner is ${winnerName}`;
+        playAgainButton.textContent = "Play Again";
+        gameOverContainer.appendChild(playAgainButton);
+    }
+
+    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents, showGameOver};
 })();
 
 const createPlayer = (name, symbol) => {
@@ -114,7 +122,7 @@ const game = (() => {
         }
     };
     const endGame = () => {
-        console.log("end game");
+        displayController.showGameOver(_currentPlayer.name);
     };
 
     return {playTurn, endGame};
