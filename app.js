@@ -7,10 +7,36 @@ const gameBoard = (() => {
     const getGrid = () => grid;
     const addMove = (rowIndex, colIndex, symbol) => {
         grid[rowIndex][colIndex] = symbol;
-        console.log(grid);
+    };
+    const checkWinner = (symbol) => {
+        let win = false;
+
+        if (
+            grid[0][0] === symbol && grid[0][1] === symbol && grid[0][2] === symbol
+            || grid[1][0] === symbol && grid[1][1] === symbol && grid[1][2] === symbol
+            || grid[2][0] === symbol && grid[2][1] === symbol && grid[2][2] === symbol
+            || grid[0][0] === symbol && grid[1][0] === symbol && grid[2][0] === symbol
+            || grid[0][1] === symbol && grid[1][1] === symbol && grid[2][1] === symbol
+            || grid[0][2] === symbol && grid[1][2] === symbol && grid[2][2] === symbol
+            || grid[0][0] === symbol && grid[1][1] === symbol && grid[2][2] === symbol
+            || grid[0][2] === symbol && grid[1][1] === symbol && grid[2][0] === symbol)
+        {
+            win = true;
+        }
+        return win;
     };
 
-    return {getGrid, addMove};
+    const checkTie = () => {
+        let tie = false;
+
+        tie = grid.every((row) => {
+            return row.every((cell) => cell !== "");   
+        });
+
+        return tie;
+    };
+
+    return {getGrid, addMove, checkWinner, checkTie};
 })();
 
 const displayController = (() => {
@@ -23,7 +49,7 @@ const displayController = (() => {
             }
         }
     };
-    const addClickEvents = () => {
+    const addGridClickEvents = () => {
         for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
             for (let colIndex = 0; colIndex < 3; colIndex++) {
                 const gridItem = document.querySelector(
@@ -37,10 +63,13 @@ const displayController = (() => {
         const colIndex = e.target.dataset.colIndex;
         game.playTurn(rowIndex, colIndex);
     };
+    const removeGridClickEvent = (rowIndex, colIndex) => {
+        const gridItem = document.querySelector(
+            `.grid-item[data-row-index="${rowIndex}"][data-col-index="${colIndex}"]`);
+        gridItem.removeEventListener("click", gridClickEvent);
+    };
 
-    addClickEvents();
-
-    return {renderGrid, addClickEvents};
+    return {renderGrid, addGridClickEvents, removeGridClickEvent};
 })();
 
 const createPlayer = (name, symbol) => {
@@ -55,11 +84,24 @@ const game = (() => {
     const playerOne = createPlayer("Player One", "X");
     const playerTwo = createPlayer("Player Two", "O");
     let currentPlayer = playerOne;
+    let win = false;
+    let tie = false;
+
+    displayController.addGridClickEvents();
 
     const playTurn = (rowIndex, colIndex) => {
+        const grid = gameBoard.getGrid();
+
         currentPlayer.playMove(rowIndex, colIndex);
-        let grid = gameBoard.getGrid();
         displayController.renderGrid(grid);
+        displayController.removeGridClickEvent(rowIndex, colIndex);
+        win = gameBoard.checkWinner(currentPlayer.symbol);
+        
+        if (!win) {
+            tie = gameBoard.checkTie();
+        }
+
+        if (win || tie) game.endGame();
 
         if (currentPlayer === playerOne) {
             currentPlayer = playerTwo;
@@ -68,6 +110,9 @@ const game = (() => {
             currentPlayer = playerOne;
         }
     };
+    const endGame = () => {
+        console.log("end game");
+    };
 
-    return {playTurn};
+    return {playTurn, endGame};
 })();
