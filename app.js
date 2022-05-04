@@ -38,6 +38,8 @@ const displayController = (() => {
         game.playTurn(rowIndex, colIndex);
     };
 
+    addClickEvents();
+
     return {renderGrid, addClickEvents};
 })();
 
@@ -53,9 +55,12 @@ const game = (() => {
     const playerOne = createPlayer("Player One", "X");
     const playerTwo = createPlayer("Player Two", "O");
     let currentPlayer = playerOne;
-    
+
     const playTurn = (rowIndex, colIndex) => {
         currentPlayer.playMove(rowIndex, colIndex);
+        let grid = gameBoard.getGrid();
+        displayController.renderGrid(grid);
+
         if (currentPlayer === playerOne) {
             currentPlayer = playerTwo;
         }
