@@ -1,9 +1,13 @@
 const gameBoard = (() => {
-    let _grid = [
-        Array(3).fill(""),
-        Array(3).fill(""),
-        Array(3).fill("")
-    ];
+    let _grid;
+
+    const createGrid = () => {
+        _grid = [
+            Array(3).fill(""),
+            Array(3).fill(""),
+            Array(3).fill("")
+        ];
+    };
     const getGrid = () => _grid;
     const addMove = (rowIndex, colIndex, symbol) => {
         _grid[rowIndex][colIndex] = symbol;
@@ -36,7 +40,7 @@ const gameBoard = (() => {
         return tie;
     };
 
-    return {getGrid, addMove, checkWinner, checkTie};
+    return {createGrid, getGrid, addMove, checkWinner, checkTie};
 })();
 
 const displayController = (() => {
@@ -75,6 +79,9 @@ const displayController = (() => {
 
         gameOverContainer.textContent = `Game Over! The Winner is ${winnerName}`;
         playAgainButton.textContent = "Play Again";
+        playAgainButton.addEventListener("click", () => {
+
+        });
         gameOverContainer.appendChild(playAgainButton);
     }
 
@@ -90,13 +97,22 @@ const createPlayer = (name, symbol) => {
 };
 
 const game = (() => {
-    const _playerOne = createPlayer("Player One", "X");
-    const _playerTwo = createPlayer("Player Two", "O");
-    let _currentPlayer = _playerOne;
-    let _win = false;
-    let _tie = false;
+    let _playerOne;
+    let _playerTwo;
+    let _currentPlayer;
+    let _win;
+    let _tie;
 
-    displayController.addGridEvents();
+    const startGame = () => {
+        _playerOne = createPlayer("Player One", "X");
+        _playerTwo = createPlayer("Player Two", "O");
+        _currentPlayer = _playerOne;
+        _win = false;
+        _tie = false;
+
+        gameBoard.createGrid();
+        displayController.addGridEvents();
+    };
 
     const playTurn = (rowIndex, colIndex) => {
         const grid = gameBoard.getGrid();
@@ -125,5 +141,7 @@ const game = (() => {
         displayController.showGameOver(_currentPlayer.name);
     };
 
-    return {playTurn, endGame};
+    return {playTurn, startGame, endGame};
 })();
+
+game.startGame();
