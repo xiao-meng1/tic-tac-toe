@@ -29,7 +29,6 @@ const gameBoard = (() => {
         }
         return win;
     };
-
     const checkTie = () => {
         let tie = false;
 
@@ -136,7 +135,6 @@ const game = (() => {
         displayController.addGridEvents();
         displayController.toggleCurrentPlayer(_currentPlayer.name);
     };
-
     const playTurn = (rowIndex, colIndex) => {
         _currentPlayer.playMove(rowIndex, colIndex);
         displayController.renderGrid();
