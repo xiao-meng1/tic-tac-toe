@@ -1,1 +1,2 @@
-# tic-tac-toe
+# Tic-Tac-Toe
+This project is the classic two-player game Tic-Tac-Toe and was used to practice the module and factory function design patterns. Check it out [here](https://xiao-meng1.github.io/tic-tac-toe/).
