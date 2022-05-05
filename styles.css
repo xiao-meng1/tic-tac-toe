@@ -30,6 +30,10 @@ h1 {
     font-size: 20px;
 }
 
+.current-player {
+    text-decoration: underline;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 120px);

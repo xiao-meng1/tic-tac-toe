@@ -47,6 +47,8 @@ const displayController = (() => {
     const _gridItemsNodeList = document.querySelectorAll(".grid-item");
     const _gameOverContainer = document.querySelector(".game-over-container");
     const _playAgainButton = document.createElement("button");
+    const _playerOne = document.querySelector(".player-one");
+    const _playerTwo = document.querySelector(".player-two");
 
     const renderGrid = () => {
         const grid = gameBoard.getGrid();
@@ -91,8 +93,18 @@ const displayController = (() => {
         });
         _gameOverContainer.appendChild(_playAgainButton);
     }
+    const toggleCurrentPlayer = (currentPlayerName) => {
+        if (currentPlayerName === "Player One") {
+            _playerOne.classList.add("current-player");
+            _playerTwo.classList.remove("current-player");
+        } else {
+            _playerTwo.classList.add("current-player");
+            _playerOne.classList.remove("current-player");
+        }
+    };
 
-    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents, addGameOver};
+    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents, 
+        addGameOver, toggleCurrentPlayer};
 })();
 
 const createPlayer = (name, symbol) => {
@@ -122,6 +134,7 @@ const game = (() => {
         gameBoard.createGrid();
         displayController.renderGrid();
         displayController.addGridEvents();
+        displayController.toggleCurrentPlayer(_currentPlayer.name);
     };
 
     const playTurn = (rowIndex, colIndex) => {
@@ -147,9 +160,11 @@ const game = (() => {
 
         if (_currentPlayer === _playerOne) {
             _currentPlayer = _playerTwo;
+            displayController.toggleCurrentPlayer(_currentPlayer.name);
         }
         else {
             _currentPlayer = _playerOne;
+            displayController.toggleCurrentPlayer(_currentPlayer.name);
         }
     };
     const endGame = () => {
