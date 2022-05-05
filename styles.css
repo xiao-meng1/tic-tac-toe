@@ -1,6 +1,7 @@
 :root {
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
+    --box-shadow-color: #737272;
 }
 
 html {
@@ -13,6 +14,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #dbdbdb;
 }
 
 h1 {
@@ -40,6 +42,7 @@ h1 {
     grid-template-rows: repeat(3, 120px);
     border-top: solid black 2px;
     border-left: solid black 2px;
+    box-shadow: var(--box-shadow-color) 2px 2px 4px;
 }
 
 .grid-container > .grid-item {
@@ -49,6 +52,7 @@ h1 {
     border-bottom: solid black 2px;
     border-right: solid black 2px;
     font-size: 80px;
+    background-color: #ededed;
 }
 
 .game-over-container {
@@ -62,5 +66,8 @@ h1 {
 }
 
 .game-over-container > button {
-    width: 100px;
+    height: 40px;
+    width: 120px;
+    font-size: 20px;
+    box-shadow: var(--box-shadow-color) 2px 2px 4px;
 }
