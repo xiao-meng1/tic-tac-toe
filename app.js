@@ -39,7 +39,13 @@ const gameBoard = (() => {
         return tie;
     };
 
-    return {createGrid, getGrid, addMove, checkWinner, checkTie};
+    return {
+        createGrid, 
+        getGrid, 
+        addMove, 
+        checkWinner, 
+        checkTie
+    };
 })();
 
 const displayController = (() => {
@@ -102,8 +108,14 @@ const displayController = (() => {
         }
     };
 
-    return {renderGrid, addGridEvents, removeGridEvent, removeAllGridEvents, 
-        addGameOver, toggleCurrentPlayer};
+    return {
+        renderGrid, 
+        addGridEvents, 
+        removeGridEvent, 
+        removeAllGridEvents, 
+        addGameOver, 
+        toggleCurrentPlayer
+    };
 })();
 
 const createPlayer = (name, symbol) => {
@@ -111,7 +123,11 @@ const createPlayer = (name, symbol) => {
         gameBoard.addMove(rowIndex, colIndex, symbol);
     }
 
-    return {name, symbol, playMove}
+    return {
+        name, 
+        symbol, 
+        playMove
+    };
 };
 
 const game = (() => {
@@ -169,7 +185,11 @@ const game = (() => {
         displayController.addGameOver(_currentPlayer.name, _result);
     };
 
-    return {playTurn, startGame, endGame};
+    return {
+        playTurn, 
+        startGame, 
+        endGame
+    };
 })();
 
 game.startGame();
